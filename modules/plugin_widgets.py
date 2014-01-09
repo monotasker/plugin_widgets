@@ -118,7 +118,8 @@ def MODAL(triggertext, headertext, body,
                             value is 0, no header will be included.
         [2] body            (str or helper obj) The content to be displayed in
                             the modal body. If this is a LOAD helper the body
-                            content will be loaded via ajax.
+                            content will be loaded via ajax *on page load*, not
+                            when the modal is shown.
 
     The following named arguments are optional:
         :footer              (str, helper obj, or 0) The content to be displayed in
@@ -140,9 +141,13 @@ def MODAL(triggertext, headertext, body,
                             to be used to trigger the modal. Defaults to 'link'
                             which returns an A() helper.
         :attributes          (dict) The names and values of any attributes to
-                            be assigned to the modal div. These can include
-                            data-attributes for setting additional options (as
-                            per the bootstrap 2.3.2 api).
+                            be assigned to the modal trigger. These can include
+                            data-attributes for setting additional modal
+                            options (as per the bootstrap 2.3.2 api). These
+                            attributes can also include an _href url (if the
+                            trigger type is 'link'). Otherwise the trigger link
+                            will not have any href value, since it is not
+                            needed by the Bootstrap modal script.
 
     The close button in the default footer requires no extra javascript (beyond
     the Bootstrap modal plugin).
