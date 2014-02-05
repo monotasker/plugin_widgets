@@ -211,14 +211,14 @@ def ACCORDION(panels, id='my_accordion'):
         pid = panel[0]
         linktext = panel[1]
         content = panel[2]
-        bclasses = panel[3] if len(panel) > 3 else ''
+        bclasses = '' if len(panel) <= 3 else panel[3]
         linkattrs = {'_class': "accordion-toggle {}-toggle".format(pid),
                      '_data-toggle': "collapse",
                      '_data-parent': "#{}".format(id),
                      '_href': "#{}".format(pid)}
         headattrs = {'_class': "accordion-heading"}
-        bodyattrs = {'_class': 'accordion-body collapse {}'.format(bclasses)}
-        innerattrs = {'_class': 'accordion-inner'}
+        bodyattrs = {'_class': 'accordion-body '}
+        innerattrs = {'_class': 'accordion-inner collapse {}'.format(bclasses), '_id': pid}
         groupattrs = {'_class': "accordion-group"}
         p = DIV(DIV(A(linktext, **linkattrs), **headattrs),
                 DIV(DIV(content, **bodyattrs), **innerattrs),
