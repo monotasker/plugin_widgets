@@ -1,5 +1,12 @@
 """ Module holding widget functions and classes for plugin_widgets """
 from gluon import A, URL, SQLFORM, DIV, SPAN, current, UL, LI, BUTTON, H3, CAT
+from gluon.contrib.markdown.markdown2 import markdown
+
+
+def MD(text):
+    """
+    """
+    return markdown(text).encode('utf8')
 
 
 def TABS(tablist):
