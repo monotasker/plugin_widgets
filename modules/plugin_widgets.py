@@ -108,7 +108,7 @@ def MODAL(triggertext, headertext, body,
           footer=None, modal_classes='', trigger_classes=None, id='mymodal',
           trigger_type='link', attributes=None):
     '''
-    Returns a bootstrap 2.3.2 modal widget wrapped in a web2py CAT() helper.
+    Returns a bootstrap 3 modal widget wrapped in a web2py CAT() helper.
 
     The returned widget can be included in a view as a single helper, in which
     case the hidden modal window is placed immediately following the trigger
@@ -165,6 +165,8 @@ def MODAL(triggertext, headertext, body,
         t_classes += 'btn'
     t_args = {'_data-toggle': 'modal',
               '_data-target': '#{}'.format(id),
+              '_data-keyboard': True,
+              '_href': '#{}'.format(id),
               '_id': '{}_trigger'.format(id),
               '_class': t_classes}
     if attributes:
@@ -177,29 +179,37 @@ def MODAL(triggertext, headertext, body,
     # create wrapper div for modal
     modal_attrs = {'_tabindex': '-1',
                    '_role': 'dialog',
-                   '_aria-labelledby': 'myModalLabel',
+                   '_data-keyboard': 'true',
+                   '_aria-labelledby': '{}_trigger'.format(id),
                    '_aria-hidden': 'true'}
-    modal = DIV(_class="modal hide fade {}".format(modal_classes),
+    modal = DIV(DIV(DIV(_class="modal-content"),
+                    _class="modal-dialog modal-lg"
+                    ),
+                _class="modal fade {}".format(modal_classes),
                 _id=id, **modal_attrs)
 
     # add header
     if headertext != 0:
-        m_head = DIV(H3(headertext), _class="modal-header")
-        modal.append(m_head)
+        m_head = DIV(H3(headertext,
+                        _id="myModalLabel",
+                        _class="modal-title"),
+                     _class="modal-header")
+        modal[0][0].append(m_head)
     else:
         pass
 
     # add body content
-    modal.append(DIV(body, _class='modal-body {}'.format(modal_classes)))
+    modal[0][0].append(DIV(body,
+                           _class='modal-body {}'.format(modal_classes)))
     # add footer
     if footer and footer != 0:
-        modal.append(DIV(footer, _class='modal-footer'))
+        modal[0][0].append(DIV(footer, _class='modal-footer'))
     elif not footer:
         attrs = {'_type': 'button',
                  '_data-dismiss': "modal",
                  '_class': "pull-right",
                  '_aria-hidden': "true"}
-        modal.append(DIV(BUTTON('Close', **attrs), _class='modal-footer'))
+        modal[0][0].append(DIV(BUTTON('Close', **attrs), _class='modal-footer'))
     else:
         pass
 
@@ -213,23 +223,26 @@ def ACCORDION(panels, id='my_accordion'):
     [2]     panel content
     [3]     body classes (string); 'in' marks default panel
     '''
-    acc = DIV(_class='accordion', _id=id)
+    acc = DIV(_class='panel-group', _id=id)
     for panel in panels:
         pid = panel[0]
         linktext = panel[1]
         content = panel[2]
         bclasses = '' if len(panel) <= 3 else panel[3]
-        linkattrs = {'_class': "accordion-toggle {}-toggle".format(pid),
+        linkattrs = {'_class': "panel-toggle {}-toggle".format(pid),
                      '_data-toggle': "collapse",
                      '_data-parent': "#{}".format(id),
                      '_href': "#{}".format(pid)}
-        headattrs = {'_class': "accordion-heading"}
-        bodyattrs = {'_class': 'accordion-body '}
-        innerattrs = {'_class': 'accordion-inner collapse {}'.format(bclasses), '_id': pid}
-        groupattrs = {'_class': "accordion-group"}
-        p = DIV(DIV(A(linktext, **linkattrs), **headattrs),
-                DIV(DIV(content, **bodyattrs), **innerattrs),
-                **groupattrs)
+        headattrs = {'_class': "panel-heading"}
+        bodyattrs = {'_class': 'panel-body '}
+        innerattrs = {'_class': 'panel collapse {}'.format(bclasses), '_id': pid}
+        p = CAT(DIV(H4(A(linktext, **linkattrs),
+                       _class="panel-title"),
+                    **headattrs),
+                DIV(DIV(content,
+                        **bodyattrs),
+                    **innerattrs),
+                )
 
         acc.append(p)
     return acc
