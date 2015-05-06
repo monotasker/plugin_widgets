@@ -1,6 +1,46 @@
 """ Module holding widget functions and classes for plugin_widgets """
 from gluon import A, URL, SQLFORM, DIV, SPAN, current, UL, LI, BUTTON, H3, CAT
+from gluon import OPTION, SELECT, H4
 from gluon.contrib.markdown.markdown2 import markdown
+from sqlhtml import OptionsWidget
+
+from operator import itemgetter
+from icu import Locale, Collator
+
+
+class SortedOptionsWidget(OptionsWidget):
+    """
+    A drop-down select widget that allows custom sorting of the options.
+
+    """
+
+    @classmethod
+    def widget(cls, field, value, collation=None, **attributes):
+        """
+        Generates a SELECT tag, including OPTIONs (only 1 option allowed)
+
+        see also: `FormWidget.widget`
+        """
+        default = dict(value=value)
+        attr = cls._attributes(field, default,
+                               **attributes)
+        requires = field.requires
+        if not isinstance(requires, (list, tuple)):
+            requires = [requires]
+        if requires:
+            if hasattr(requires[0], 'options'):
+                options = requires[0].options()
+            else:
+                raise SyntaxError(
+                    'widget cannot determine options of %s' % field)
+
+        if collation:
+            myloc = Locale(collation)
+            coll = Collator.createInstance(myloc)
+            options = sorted(options, key=itemgetter(1), cmp=coll.compare)
+
+        opts = [OPTION(v, _value=k) for (k, v) in options]
+        return SELECT(*opts, **attr)
 
 
 def MD(text):
