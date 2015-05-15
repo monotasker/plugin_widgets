@@ -2,7 +2,7 @@
 from gluon import A, URL, SQLFORM, DIV, SPAN, current, UL, LI, BUTTON, H3, CAT
 from gluon import OPTION, SELECT, H4
 from gluon.contrib.markdown.markdown2 import markdown
-from sqlhtml import OptionsWidget
+from gluon.sqlhtml import OptionsWidget
 
 from operator import itemgetter
 from icu import Locale, Collator
