@@ -136,7 +136,7 @@ class POPOVER(object):
                   '_data-placement': placement,
                   '_data-toggle': 'popover'}
         if kwargs:
-            newargs = {'_data-{}'.format(k): v for k, v in kwargs.iteritems()}
+            newargs = {'_data-{}'.format(k): v for k, v in kwargs.items()}
             myargs.update(newargs)
         popover = DIV(linktext, _id=myid, _class=classes, **myargs)
         popover.append(DIV(content, _class="popover-content",
@@ -369,4 +369,4 @@ def ROLE(content, role=None):
     if auth.has_membership(role):
         return content
     else:
-        return u'\u200b'
+        return '\u200b'
