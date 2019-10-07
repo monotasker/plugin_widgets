@@ -146,7 +146,7 @@ class POPOVER(object):
 
 def MODAL(triggertext, headertext, body,
           footer=None, modal_classes='', trigger_classes=None, id='mymodal',
-          trigger_type='link', attributes=None):
+          trigger_type='link', attributes=None, tabindex=None):
     '''
     Returns a bootstrap 3 modal widget wrapped in a web2py CAT() helper.
 
@@ -207,6 +207,7 @@ def MODAL(triggertext, headertext, body,
               '_data-target': '#{}'.format(id),
               '_data-keyboard': True,
               '_href': '#{}'.format(id),
+              'tabindex': 0 if not tabindex else tabindex,
               '_id': '{}_trigger'.format(id),
               '_class': t_classes}
     if attributes:
